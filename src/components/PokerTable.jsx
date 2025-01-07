@@ -32,7 +32,7 @@ const PokerTable = () => {
     const [winningRank, setWinningRank] = useState('');
     const [playerRank, setPlayerRank] = useState('');
     const [botRank, setBotRank] = useState('');
-    const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River
+    const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River, 4: Decide, 5: Show Winner
     const [hasFolded, setHasFolded] = useState(false);
 
 
@@ -55,6 +55,7 @@ const PokerTable = () => {
         setPlayerRank('');
         setBotRank('');
         setWinningRank('');
+        setHasFolded(false);
     }
 
     const updateHands = (newCommunityCards) => {
@@ -92,9 +93,11 @@ const PokerTable = () => {
         setCommunityCards([...communityCards, ...river]);
         setDeck(deck);
         setGameStage(4);
-
-        const { playerHandResult, botHandResult } = updateHands([...communityCards, ...river]);
-
+        updateHands([...communityCards, ...river]);
+    }
+    
+    const revealWinner = () => {
+        const { playerHandResult, botHandResult } = updateHands([...communityCards]);
         const winners = pokersolver.Hand.winners([playerHandResult, botHandResult]);
         
         if (winners.length === 1) {
@@ -104,22 +107,32 @@ const PokerTable = () => {
             setResult('Pareggio!');
             setWinningRank(playerHandResult.name);
         }
+
+        setGameStage(5)
     };
 
     const handleFold = () => {
         setHasFolded(true);
         setResult('Hai fatto fold! Il bot vince.');
+        setGameStage(5);
     };
 
 
     return (
         <div>
-            <button onClick={dealCards}>Distribuisci carte</button>
+            <button onClick={dealCards} disabled={(gameStage !== 0 && gameStage !== 5)}>Distribuisci carte</button>
 
-            {gameStage === 1 && <button onClick={revealFlop}>Scopri il Flop</button>}
-            {gameStage === 2 && <button onClick={revealTurn}>Scopri il Turn</button>}
-            {gameStage === 3 && <button onClick={revealRiver}>Scopri il River</button>}
+            {gameStage === 1 && <button onClick={revealFlop} disabled={hasFolded} >Scopri il Flop</button>}
+            {gameStage === 2 && <button onClick={revealTurn} disabled={hasFolded} >Scopri il Turn</button>}
+            {gameStage === 3 && <button onClick={revealRiver} disabled={hasFolded} >Scopri il River</button>}
+            {gameStage === 4 && <button onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore</button>}
 
+            {gameStage > 0 && gameStage < 5 && (
+                <button onClick={handleFold} disabled={hasFolded}>
+                Fold
+                </button>
+            )}
+            
             <div style={{ marginTop: '20px' }}>
                 <h3>Le tue carte:</h3>
                 {playerHand.map((card) => (
