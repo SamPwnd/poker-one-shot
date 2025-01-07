@@ -24,78 +24,126 @@ const shuffleDeck = (deck) => {
 };
 
 const PokerTable = () => {
-  const [playerHand, setPlayerHand] = useState([]);
-  const [botHand, setBotHand] = useState([]);
-  const [communityCards, setCommunityCards] = useState([]);
-  const [result, setResult] = useState('');
-  const [winningRank, setWinningRank] = useState('');
-  const [playerRank, setPlayerRank] = useState('');
-  const [botRank, setBotRank] = useState('');
+    const [deck, setDeck] = useState([]);
+    const [playerHand, setPlayerHand] = useState([]);
+    const [botHand, setBotHand] = useState([]);
+    const [communityCards, setCommunityCards] = useState([]);
+    const [result, setResult] = useState('');
+    const [winningRank, setWinningRank] = useState('');
+    const [playerRank, setPlayerRank] = useState('');
+    const [botRank, setBotRank] = useState('');
+    const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River
+    const [hasFolded, setHasFolded] = useState(false);
 
 
-  const dealCards = () => {
-    let deck = shuffleDeck(generateDeck()); // Mischia il mazzo
+    const dealCards = () => {
+        const newDeck = shuffleDeck(generateDeck());
+        setDeck(newDeck); // Mischia il mazzo
 
-    // Distribuisci 2 carte personali per ciascun giocatore
-    const player = deck.splice(0, 2);
-    const bot = deck.splice(0, 2);
-    const community = deck.splice(0, 5);
-    
-    setPlayerHand(player);
-    setBotHand(bot);
-    setCommunityCards(community);
+        // Distribuisci 2 carte personali per ciascun giocatore
+        const player = newDeck.splice(0, 2);
+        const bot = newDeck.splice(0, 2);
 
-    // Combina le carte personali e quelle comuni per valutare le mani
-    const playerCards = [...player, ...community];
-    const botCards = [...bot, ...community];
+        setPlayerHand(player);
+        setBotHand(bot);
 
-    const playerHandResult = pokersolver.Hand.solve(playerCards);
-    const botHandResult = pokersolver.Hand.solve(botCards);
+        // Inizia il gioco con le carte comuni vuote
+        setCommunityCards([]);
+        setGameStage(1); // Comincia con il flop
 
-    setPlayerRank(playerHandResult.name);
-    setBotRank(botHandResult.name);
-
-    // Confronta le mani
-    const hands = [playerHandResult, botHandResult];
-    const winners = pokersolver.Hand.winners(hands);
-    
-    // Controlla il risultato
-    if (winners.length === 1) {
-        setResult(winners[0] === playerHandResult ? 'Hai vinto!' : 'Hai perso!');
-        setWinningRank(winners[0].descr);
-    } else if (winners.length === 2) {
-        setResult('Pareggio!');
-        setWinningRank(playerHandResult.name);
+        setResult('');
+        setPlayerRank('');
+        setBotRank('');
+        setWinningRank('');
     }
-};
 
-  return (
-    <div>
-      <button onClick={dealCards}>Distribuisci carte</button>
-      <div style={{ marginTop: '20px' }}>
-        <h3>Le tue carte:</h3>
-        {playerHand.map((card) => (
-          <PokerCard short={card} key={card}/>
-        ))}
-        <p>{playerRank}</p>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <h3>Carte del bot:</h3>
-        {botHand.map((card) => (
-          <PokerCard short={card} key={card}/>
-        ))}
-        <p>{botRank}</p>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <h3>Carte comuni:</h3>
-        {communityCards.map((card, index) => (
-          <PokerCard short={card} key={`community-${index}`} />
-        ))}
-      </div>
-      <h2 style={{ marginTop: '20px' }}>{result}</h2>
-      <h3>{winningRank}</h3>
-    </div>
-  );
+    const updateHands = (newCommunityCards) => {
+        // Combina le carte personali e quelle comuni per valutare le mani
+        const playerCards = [...playerHand, ...newCommunityCards];
+        const botCards = [...botHand, ...newCommunityCards];
+
+        const playerHandResult = pokersolver.Hand.solve(playerCards);
+        const botHandResult = pokersolver.Hand.solve(botCards);
+
+        setPlayerRank(playerHandResult.name);
+        setBotRank(botHandResult.name);
+
+        return { playerHandResult, botHandResult };
+    };
+
+    const revealFlop = () => {
+        const flop = deck.splice(0, 3);
+        setCommunityCards([...communityCards, ...flop]);
+        setDeck(deck);
+        setGameStage(2);
+        updateHands([...communityCards, ...flop]);
+    };
+
+    const revealTurn = () => {
+        const turn = deck.splice(0, 1);
+        setCommunityCards([...communityCards, ...turn]);
+        setDeck(deck);
+        setGameStage(3);
+        updateHands([...communityCards, ...turn]);
+    };
+
+    const revealRiver = () => {
+        const river = deck.splice(0, 1);
+        setCommunityCards([...communityCards, ...river]);
+        setDeck(deck);
+        setGameStage(4);
+
+        const { playerHandResult, botHandResult } = updateHands([...communityCards, ...river]);
+
+        const winners = pokersolver.Hand.winners([playerHandResult, botHandResult]);
+        
+        if (winners.length === 1) {
+            setResult(winners[0] === playerHandResult ? 'Hai vinto!' : 'Hai perso!');
+            setWinningRank(winners[0].descr);
+        } else {
+            setResult('Pareggio!');
+            setWinningRank(playerHandResult.name);
+        }
+    };
+
+    const handleFold = () => {
+        setHasFolded(true);
+        setResult('Hai fatto fold! Il bot vince.');
+    };
+
+
+    return (
+        <div>
+            <button onClick={dealCards}>Distribuisci carte</button>
+
+            {gameStage === 1 && <button onClick={revealFlop}>Scopri il Flop</button>}
+            {gameStage === 2 && <button onClick={revealTurn}>Scopri il Turn</button>}
+            {gameStage === 3 && <button onClick={revealRiver}>Scopri il River</button>}
+
+            <div style={{ marginTop: '20px' }}>
+                <h3>Le tue carte:</h3>
+                {playerHand.map((card) => (
+                    <PokerCard short={card} key={card}/>
+                ))}
+                <p>{playerRank}</p>
+            </div>
+            <div style={{ marginTop: '20px' }}>
+                <h3>Carte del bot:</h3>
+                {botHand.map((card) => (
+                    <PokerCard short={card} key={card}/>
+                ))}
+                <p>{botRank}</p>
+            </div>
+            <div style={{ marginTop: '20px' }}>
+                <h3>Carte comuni:</h3>
+                {communityCards.map((card, index) => (
+                    <PokerCard short={card} key={`community-${index}`} />
+                ))}
+            </div>
+            <h2 style={{ marginTop: '20px' }}>{result}</h2>
+            <h3>{winningRank}</h3>
+        </div>
+    );
 };
 
 export default PokerTable;
