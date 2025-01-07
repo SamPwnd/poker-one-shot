@@ -133,26 +133,35 @@ const PokerTable = () => {
                 </button>
             )}
             
-            <div style={{ marginTop: '20px' }}>
-                <h3>Le tue carte:</h3>
-                {playerHand.map((card) => (
-                    <PokerCard short={card} key={card}/>
-                ))}
-                <p>{playerRank}</p>
-            </div>
-            <div style={{ marginTop: '20px' }}>
-                <h3>Carte del bot:</h3>
-                {botHand.map((card) => (
-                    <PokerCard short={card} key={card}/>
-                ))}
-                <p>{botRank}</p>
-            </div>
-            <div style={{ marginTop: '20px' }}>
-                <h3>Carte comuni:</h3>
-                {communityCards.map((card, index) => (
-                    <PokerCard short={card} key={`community-${index}`} />
-                ))}
-            </div>
+            {gameStage > 0 && (
+                <>
+                <div style={{ marginTop: '20px' }}>
+                    <h3>Le tue carte:</h3>
+                    {playerHand.map((card) => (
+                        <PokerCard short={card} key={card}/>
+                    ))}
+                    <p>{playerRank}</p>
+                </div>
+                <div style={{ marginTop: '20px' }}>
+                    <h3>Carte del bot:</h3>
+                    {botHand.map((card) => (
+                        <PokerCard short={card} key={card}/>
+                    ))}
+                    <p>{botRank}</p>
+                </div>
+                <div style={{ marginTop: '20px' }}>
+                    <h3>Carte comuni:</h3>
+                    {communityCards.map((card, index) => (
+                        <PokerCard short={card} key={`community-${index}`} />
+                    ))}
+                    {/* Mostra carte coperte per quelle non ancora rivelate */}
+                    {Array.from({ length: 5 - communityCards.length }).map((_, index) => (
+                        <PokerCard isBackwards={true} key={`hidden-${index}`} />
+                    ))}
+                </div>
+                </>
+            )}
+            
             <h2 style={{ marginTop: '20px' }}>{result}</h2>
             <h3>{winningRank}</h3>
         </div>
