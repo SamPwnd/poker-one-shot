@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PokerCard from 'react-pokercards';
 import pokersolver from 'pokersolver';
 
@@ -34,6 +34,7 @@ const PokerTable = () => {
     const [botRank, setBotRank] = useState('');
     const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River, 4: Decide, 5: Show Winner
     const [hasFolded, setHasFolded] = useState(false);
+    const [freeFolds, setFreeFolds] = useState(2);
     const [score, setScore] = useState(0);
     const [hintUsed, setHintUsed] = useState(false);
     const [botHint, setBotHint] = useState(''); // Mostra i punti del bot
@@ -129,11 +130,24 @@ const PokerTable = () => {
     };
 
     const handleFold = () => {
+        if (freeFolds > 0 && gameStage < 4) {
+            // Fold gratuito
+            setFreeFolds((prevFolds) => prevFolds - 1);
+        }
+        else {
+            updateScore(-1); // Fold = -1
+        }
         setHasFolded(true);
         setResult('Hai fatto fold!');
-        updateScore(-1); // Fold = -1
         setGameStage(5);
         setBotHint(botRank)
+    };
+
+    const getFoldButtonText = () => {
+        if (gameStage >= 4 || freeFolds === 0) {
+            return 'Fold'; // Fase successiva al River o nessun fold gratuito
+        }
+        return `Fold (${freeFolds})`; // Mostra il numero di fold gratuiti rimanenti
     };
 
     const updateScore = (change) => {
@@ -146,6 +160,18 @@ const PokerTable = () => {
             setHintUsed(true);
         }
     };
+
+    const resetGame = () => {
+        setGameStage(0); // Reset del gioco
+        setScore(0);
+    }
+    useEffect(() => {
+        if (score >= 5) {
+            setResult('Hai raggiunto 5 punti! Congratulazioni!');
+            resetGame();
+        }
+    }, [score]);
+    
 
 
     return (
@@ -160,10 +186,10 @@ const PokerTable = () => {
             {gameStage > 0 && gameStage < 5 && (
                 <>
                     <button onClick={handleFold} disabled={hasFolded}>
-                    Fold
+                        {getFoldButtonText()}
                     </button>
                     <button onClick={showBotHint} disabled={hintUsed || gameStage === 0}>
-                    Usa suggerimento
+                        Usa suggerimento
                     </button>
                 </>
             )}
@@ -172,6 +198,7 @@ const PokerTable = () => {
             
             {gameStage > 0 && (
                 <>
+                <button onClick={resetGame}>RESET</button>
                 <div style={{ marginTop: '20px' }}>
                     <h3>Le tue carte:</h3>
                     {playerHand.map((card) => (
