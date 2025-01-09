@@ -17,6 +17,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+    text-align: center;
+    padding: 1rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -45,15 +59,35 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+// Scrollbar
+body::-webkit-scrollbar, div::-webkit-scrollbar {
+  width: 6px;
+}
+
+body::-webkit-scrollbar-track, div::-webkit-scrollbar-track {
+  background: theme('colors.zinc.900');
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
+  background: theme('colors.red.800');
+  border-radius: 3px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: crimson theme('colors.zinc.900');
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+//Footer 
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: red;
+    padding: 2rem;
+    z-index: -1;
 }

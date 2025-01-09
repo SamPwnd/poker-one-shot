@@ -177,39 +177,9 @@ const PokerTable = () => {
 
 
     return (
-        <div>
-            <button onClick={dealCards} disabled={(gameStage !== 0 && gameStage !== 5)}>Distribuisci carte</button>
-
-            {gameStage === 1 && <button onClick={revealFlop} disabled={hasFolded} >Scopri il Flop</button>}
-            {gameStage === 2 && <button onClick={revealTurn} disabled={hasFolded} >Scopri il Turn</button>}
-            {gameStage === 3 && <button onClick={revealRiver} disabled={hasFolded} >Scopri il River</button>}
-            {gameStage === 4 && <button onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore</button>}
-
-            {gameStage > 0 && gameStage < 5 && (
-                <>
-                    <button onClick={handleFold} disabled={hasFolded}>
-                        {getFoldButtonText()}
-                    </button>
-                    <button onClick={showBotHint} disabled={hintUsed || gameStage === 0}>
-                        Usa suggerimento
-                    </button>
-                </>
-            )}
-
-            
-            
+        <div className='relative'>            
             {gameStage > 0 && (
                 <>
-                <button onClick={resetGame}>RESET</button>
-                <div className='mt-6'>
-                    <h3>Le tue carte:</h3>
-                    <div className="mt-3 flex flex-wrap justify-center gap-1">
-                        {playerHand.map((card) => (
-                            <PokerCard short={card} key={card}/>
-                        ))}
-                        <p>{playerRank}</p>
-                    </div>
-                </div>
                 <div className='mt-6'>
                     <h3>Carte del bot:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
@@ -217,8 +187,7 @@ const PokerTable = () => {
                             <PokerCard short={card} key={card}/>
                         ))}
                         {gameStage === 4 || botHint && <p>{botHint}</p>}
-                    </div>
-                    
+                    </div>   
                 </div>
                 <div className='mt-6'>
                     <h3>Carte comuni:</h3>
@@ -231,14 +200,47 @@ const PokerTable = () => {
                             <PokerCard isBackwards={true} key={`hidden-${index}`} />
                         ))}
                     </div>
-                    
+                </div>
+                <div className='mt-6'>
+                    <h3>Le tue carte:</h3>
+                    <div className="mt-3 flex flex-wrap justify-center gap-1">
+                        {playerHand.map((card) => (
+                            <PokerCard short={card} key={card}/>
+                        ))}
+                        <p>{playerRank}</p>
+                    </div>
                 </div>
                 </>
             )}
             
-            <h2 className='mt-6'>{result}</h2>
-            <h3>{winningRank}</h3>
-            <h3>Punteggio attuale: {score}</h3>
+            <section className='controls fixed'>
+                {gameStage > 0 && (
+                    <>
+                    <h2 className='mt-6'>{result}</h2>
+                    <h3>{winningRank}</h3>
+                    <h3>Punteggio attuale: {score}</h3>
+                    </>
+                )}
+                
+                {(gameStage === 0 || gameStage === 5) && <button onClick={dealCards} disabled={(gameStage !== 0 && gameStage !== 5)}>Distribuisci carte</button>}
+
+                {gameStage === 1 && <button onClick={revealFlop} disabled={hasFolded} >Scopri il Flop</button>}
+                {gameStage === 2 && <button onClick={revealTurn} disabled={hasFolded} >Scopri il Turn</button>}
+                {gameStage === 3 && <button onClick={revealRiver} disabled={hasFolded} >Scopri il River</button>}
+                {gameStage === 4 && <button onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore</button>}
+                {gameStage > 0 && gameStage < 5 && (
+                    <>
+                        <button onClick={handleFold} disabled={hasFolded}>
+                            {getFoldButtonText()}
+                        </button>
+                        <button onClick={showBotHint} disabled={hintUsed || gameStage === 0}>
+                            Usa suggerimento
+                        </button>
+                    </>
+                )}
+
+                {gameStage > 0 && <button onClick={resetGame}>RESET</button>}
+            </section>
         </div>
     );
 };
