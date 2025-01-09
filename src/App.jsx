@@ -3,12 +3,12 @@ import './App.css'
 import PokerTable from './components/PokerTable';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
       <div>
         <h1>Texas Hold'em Poker</h1>
+        <h2>One Shot</h2>
         <PokerTable />
       </div>
     </>

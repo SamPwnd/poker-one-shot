@@ -34,6 +34,10 @@ const PokerTable = () => {
     const [botRank, setBotRank] = useState('');
     const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River, 4: Decide, 5: Show Winner
     const [hasFolded, setHasFolded] = useState(false);
+    const [score, setScore] = useState(0);
+    const [hintUsed, setHintUsed] = useState(false);
+    const [botHint, setBotHint] = useState(''); // Mostra i punti del bot
+    
 
 
     const dealCards = () => {
@@ -54,6 +58,7 @@ const PokerTable = () => {
         setResult('');
         setPlayerRank('');
         setBotRank('');
+        setBotHint('');
         setWinningRank('');
         setHasFolded(false);
     }
@@ -68,6 +73,7 @@ const PokerTable = () => {
 
         setPlayerRank(playerHandResult.name);
         setBotRank(botHandResult.name);
+        setBotHint('');
 
         return { playerHandResult, botHandResult };
     };
@@ -77,6 +83,7 @@ const PokerTable = () => {
         setCommunityCards([...communityCards, ...flop]);
         setDeck(deck);
         setGameStage(2);
+        setBotHint('');
         updateHands([...communityCards, ...flop]);
     };
 
@@ -85,6 +92,7 @@ const PokerTable = () => {
         setCommunityCards([...communityCards, ...turn]);
         setDeck(deck);
         setGameStage(3);
+        setBotHint('');
         updateHands([...communityCards, ...turn]);
     };
 
@@ -93,19 +101,28 @@ const PokerTable = () => {
         setCommunityCards([...communityCards, ...river]);
         setDeck(deck);
         setGameStage(4);
+        setBotHint('');
         updateHands([...communityCards, ...river]);
     }
     
     const revealWinner = () => {
         const { playerHandResult, botHandResult } = updateHands([...communityCards]);
         const winners = pokersolver.Hand.winners([playerHandResult, botHandResult]);
-        
+        setBotHint(botRank)
         if (winners.length === 1) {
-            setResult(winners[0] === playerHandResult ? 'Hai vinto!' : 'Hai perso!');
-            setWinningRank(winners[0].descr);
+            if (winners[0] === playerHandResult) {
+                setResult('Hai vinto!');
+                setWinningRank(winners[0].descr);
+                updateScore(2); // Vittoria = +2
+            } else {
+                setResult('Hai perso!');
+                setWinningRank(winners[0].descr);
+                updateScore(-2); // Sconfitta = -2
+            }
         } else {
             setResult('Pareggio!');
             setWinningRank(playerHandResult.name);
+            updateScore(0); // Pareggio = 0
         }
 
         setGameStage(5)
@@ -113,8 +130,21 @@ const PokerTable = () => {
 
     const handleFold = () => {
         setHasFolded(true);
-        setResult('Hai fatto fold! Il bot vince.');
+        setResult('Hai fatto fold!');
+        updateScore(-1); // Fold = -1
         setGameStage(5);
+        setBotHint(botRank)
+    };
+
+    const updateScore = (change) => {
+        setScore((prevScore) => prevScore + change);
+    };
+
+    const showBotHint = () => {
+        if (!hintUsed) {
+            setBotHint(botRank);
+            setHintUsed(true);
+        }
     };
 
 
@@ -128,10 +158,17 @@ const PokerTable = () => {
             {gameStage === 4 && <button onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore</button>}
 
             {gameStage > 0 && gameStage < 5 && (
-                <button onClick={handleFold} disabled={hasFolded}>
-                Fold
-                </button>
+                <>
+                    <button onClick={handleFold} disabled={hasFolded}>
+                    Fold
+                    </button>
+                    <button onClick={showBotHint} disabled={hintUsed || gameStage === 0}>
+                    Usa suggerimento
+                    </button>
+                </>
             )}
+
+            
             
             {gameStage > 0 && (
                 <>
@@ -147,7 +184,7 @@ const PokerTable = () => {
                     {botHand.map((card) => (
                         <PokerCard short={card} key={card}/>
                     ))}
-                    <p>{botRank}</p>
+                    {gameStage === 4 || botHint && <p>{botHint}</p>}
                 </div>
                 <div style={{ marginTop: '20px' }}>
                     <h3>Carte comuni:</h3>
@@ -164,6 +201,7 @@ const PokerTable = () => {
             
             <h2 style={{ marginTop: '20px' }}>{result}</h2>
             <h3>{winningRank}</h3>
+            <h3>Punteggio attuale: {score}</h3>
         </div>
     );
 };
