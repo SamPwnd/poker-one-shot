@@ -164,6 +164,7 @@ const PokerTable = () => {
     const resetGame = () => {
         setGameStage(0); // Reset del gioco
         setScore(0);
+        setFreeFolds(2);
     }
     useEffect(() => {
         if (score >= 5) {
