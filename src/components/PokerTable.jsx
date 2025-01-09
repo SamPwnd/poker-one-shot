@@ -166,6 +166,7 @@ const PokerTable = () => {
         setScore(0);
         setFreeFolds(2);
     }
+
     useEffect(() => {
         if (score >= 5) {
             setResult('Hai raggiunto 5 punti! Congratulazioni!');
@@ -200,34 +201,42 @@ const PokerTable = () => {
             {gameStage > 0 && (
                 <>
                 <button onClick={resetGame}>RESET</button>
-                <div style={{ marginTop: '20px' }}>
+                <div className='mt-6'>
                     <h3>Le tue carte:</h3>
-                    {playerHand.map((card) => (
-                        <PokerCard short={card} key={card}/>
-                    ))}
-                    <p>{playerRank}</p>
+                    <div className="mt-3 flex flex-wrap justify-center gap-1">
+                        {playerHand.map((card) => (
+                            <PokerCard short={card} key={card}/>
+                        ))}
+                        <p>{playerRank}</p>
+                    </div>
                 </div>
-                <div style={{ marginTop: '20px' }}>
+                <div className='mt-6'>
                     <h3>Carte del bot:</h3>
-                    {botHand.map((card) => (
-                        <PokerCard short={card} key={card}/>
-                    ))}
-                    {gameStage === 4 || botHint && <p>{botHint}</p>}
+                    <div className="mt-3 flex flex-wrap justify-center gap-1">
+                        {botHand.map((card) => (
+                            <PokerCard short={card} key={card}/>
+                        ))}
+                        {gameStage === 4 || botHint && <p>{botHint}</p>}
+                    </div>
+                    
                 </div>
-                <div style={{ marginTop: '20px' }}>
+                <div className='mt-6'>
                     <h3>Carte comuni:</h3>
-                    {communityCards.map((card, index) => (
-                        <PokerCard short={card} key={`community-${index}`} />
-                    ))}
-                    {/* Mostra carte coperte per quelle non ancora rivelate */}
-                    {Array.from({ length: 5 - communityCards.length }).map((_, index) => (
-                        <PokerCard isBackwards={true} key={`hidden-${index}`} />
-                    ))}
+                    <div className="mt-3 flex flex-wrap justify-center gap-1">
+                        {communityCards.map((card, index) => (
+                            <PokerCard short={card} key={`community-${index}`} />
+                        ))}
+                        {/* Mostra carte coperte per quelle non ancora rivelate */}
+                        {Array.from({ length: 5 - communityCards.length }).map((_, index) => (
+                            <PokerCard isBackwards={true} key={`hidden-${index}`} />
+                        ))}
+                    </div>
+                    
                 </div>
                 </>
             )}
             
-            <h2 style={{ marginTop: '20px' }}>{result}</h2>
+            <h2 className='mt-6'>{result}</h2>
             <h3>{winningRank}</h3>
             <h3>Punteggio attuale: {score}</h3>
         </div>
