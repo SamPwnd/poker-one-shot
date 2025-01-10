@@ -8,7 +8,7 @@ const Modal = () => {
     };
 
     return (
-        <div className='absolute z-10 section-container top-4'>
+        <div className='absolute z-50 section-container top-4'>
             <button 
                 onClick={toggleInstructions} 
                 className="bg-zinc-900 text-white px-5 py-2 rounded-full shadow text-2xl"
