@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PokerCard from 'react-pokercards';
 import pokersolver from 'pokersolver';
 import { TbCardsFilled } from "react-icons/tb";
+import { GiCardPickup } from "react-icons/gi";
+import { RiResetLeftFill } from "react-icons/ri";
 
 
 const generateDeck = () => {
@@ -146,9 +148,9 @@ const PokerTable = () => {
 
     const getFoldButtonText = () => {
         if (gameStage >= 4 || freeFolds === 0) {
-            return 'Fold'; // Fase successiva al River o nessun fold gratuito
+            return 'FOLD'; // Fase successiva al River o nessun fold gratuito
         }
-        return `Fold (${freeFolds})`; // Mostra il numero di fold gratuiti rimanenti
+        return `FOLD (${freeFolds})`; // Mostra il numero di fold gratuiti rimanenti
     };
 
     const updateScore = (change) => {
@@ -178,14 +180,14 @@ const PokerTable = () => {
 
 
     return (
-        <div className='relative'>
+        <main className={`poker-table${gameStage === 5 ? '--overlay' : ''} relative section-container h-screen overflow-hidden`}>
             {gameStage > 0 && (
                 <>
                 <div className='mt-6'>
                     <h3>Carte del bot:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {botHand.map((card) => (
-                            <PokerCard short={card} key={card}/>
+                            <PokerCard size={120} short={card} key={card}/>
                         ))}
                         {gameStage === 4 || botHint && <p>{botHint}</p>}
                     </div>   
@@ -194,11 +196,11 @@ const PokerTable = () => {
                     <h3>Carte comuni:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {communityCards.map((card, index) => (
-                            <PokerCard short={card} key={`community-${index}`} />
+                            <PokerCard size={90} short={card} key={`community-${index}`} />
                         ))}
                         {/* Mostra carte coperte per quelle non ancora rivelate */}
                         {Array.from({ length: 5 - communityCards.length }).map((_, index) => (
-                            <PokerCard isBackwards={true} key={`hidden-${index}`} />
+                            <PokerCard size={90} isBackwards={true} key={`hidden-${index}`} />
                         ))}
                     </div>
                 </div>
@@ -206,7 +208,7 @@ const PokerTable = () => {
                     <h3>Le tue carte:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {playerHand.map((card) => (
-                            <PokerCard short={card} key={card}/>
+                            <PokerCard size={120} short={card} key={card}/>
                         ))}
                         <p>{playerRank}</p>
                     </div>
@@ -214,44 +216,45 @@ const PokerTable = () => {
                 </>
             )}
 
-            <section className='controls fixed left-0 bottom-0 bg-red-900'>
+            <section className='controls fixed left-0 bottom-0 bg-red-900 rounded-t-xl rounded-tr-xl pb-3 w-full z-20'>
                 {gameStage > 0 && (
-                    <>
-                    <h2 className='mt-6'>{result}</h2>
-                    <h3>{winningRank}</h3>
-                    <h3>Punteggio attuale: {score}</h3>
-                    </>
+                    <div className='bg-emerald-800 rounded-t-xl rounded-tr-xl mb-3 p-px'>
+                        <h2>{result}</h2>
+                        <h3>{winningRank}</h3>
+                        <h3>Punteggio attuale: {score}</h3>
+                    </div>
                 )}
-                
-                {gameStage === 1 && <button onClick={revealFlop} disabled={hasFolded} >Scopri il Flop</button>}
-                {gameStage === 2 && <button onClick={revealTurn} disabled={hasFolded} >Scopri il Turn</button>}
-                {gameStage === 3 && <button onClick={revealRiver} disabled={hasFolded} >Scopri il River</button>}
-                {gameStage === 4 && <button onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore</button>}
-                {gameStage > 0 && gameStage < 5 && (
-                    <>
-                        <button onClick={handleFold} disabled={hasFolded}>
-                            {getFoldButtonText()}
-                        </button>
-                        <button onClick={showBotHint} disabled={hintUsed || gameStage === 0}>
-                            Usa suggerimento
-                        </button>
-                    </>
-                )}
+                <div className='flex section-container flex-wrap justify-center gap-2 items-stretch'>
+                    {gameStage === 1 && <button className='w-full flex items-center justify-center gap-3 text-lg' onClick={revealFlop} disabled={hasFolded}>Scopri il Flop<GiCardPickup size={26} /></button>}
+                    {gameStage === 2 && <button className='w-full flex items-center justify-center gap-3 text-lg' onClick={revealTurn} disabled={hasFolded}>Scopri il Turn<GiCardPickup size={26} /></button>}
+                    {gameStage === 3 && <button className='w-full flex items-center justify-center gap-3 text-lg' onClick={revealRiver} disabled={hasFolded}>Scopri il River<GiCardPickup size={26} /></button>}
+                    {gameStage === 4 && <button className='w-full flex items-center justify-center gap-3 text-lg' onClick={revealWinner} disabled={hasFolded}>Vedi il Vincitore<GiCardPickup size={26} /></button>}
+                    {gameStage > 0 && gameStage < 5 && (
+                        <>
+                            <button onClick={handleFold} className='flex-1' disabled={hasFolded}>
+                                {getFoldButtonText()}
+                            </button>
+                            <button onClick={showBotHint} className='flex-1' disabled={hintUsed || gameStage === 0}>
+                                SBIRCIA
+                            </button>
+                        </>
+                    )}
 
-                {gameStage > 0 && <button onClick={resetGame}>RESET</button>}
+                    {gameStage > 0 && <button onClick={resetGame} className='flex-1 flex items-center justify-center gap-2'>RESET<RiResetLeftFill /></button>}
+                </div>
             </section>
             
-            <section className='relative top-64'>
-                {(gameStage === 0 || gameStage === 5) && 
-                <div className='flex flex-col justify-center items-center' onClick={dealCards}>
-                    <button className='rounded-full w-20 h-20 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
-                        <TbCardsFilled size='42'/>
-                    </button>
-                    <p className='p-2 absolute font-semibold -bottom-7 rounded-xl text-lg bg-emerald-800'>Distribuisci carte</p>
-                </div>
-                }
-            </section>
-        </div>
+            {(gameStage === 0 || gameStage === 5) && 
+                <section className={`z-20 relative ${gameStage === 5 ? '-top-64' : 'top-64'}`}>
+                    <div className='flex flex-col justify-center items-center' onClick={dealCards}>
+                        <button className='rounded-full w-20 h-20 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
+                            <TbCardsFilled size='42'/>
+                        </button>
+                        <p className='p-2 absolute font-semibold -bottom-7 rounded-xl text-lg bg-emerald-800'>Distribuisci carte</p>
+                    </div>
+                </section>
+            }
+        </main>
     );
 };
 

@@ -24,20 +24,9 @@
 
 body {
     text-align: center;
-    padding: 1rem 2rem;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    height: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+    overflow-y: hidden;
 }
 
 button {
@@ -52,7 +41,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: theme('colors.red.800');
 }
 button:focus,
 button:focus-visible {
@@ -79,4 +68,19 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
   body {
     scrollbar-color: crimson theme('colors.zinc.900');
   }
+}
+
+.section-container {
+    @apply 2xl:container xl:px-20 md:px-12 px-4 mx-auto;
+}
+
+.poker-table--overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.7;
 }
