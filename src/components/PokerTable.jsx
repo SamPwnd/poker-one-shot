@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PokerCard from 'react-pokercards';
 import pokersolver from 'pokersolver';
+import { TbCardsFilled } from "react-icons/tb";
 
 
 const generateDeck = () => {
@@ -177,7 +178,7 @@ const PokerTable = () => {
 
 
     return (
-        <div className='relative'>            
+        <div className='relative'>
             {gameStage > 0 && (
                 <>
                 <div className='mt-6'>
@@ -212,8 +213,8 @@ const PokerTable = () => {
                 </div>
                 </>
             )}
-            
-            <section className='controls fixed'>
+
+            <section className='controls fixed left-0 bottom-0 bg-red-900'>
                 {gameStage > 0 && (
                     <>
                     <h2 className='mt-6'>{result}</h2>
@@ -222,8 +223,6 @@ const PokerTable = () => {
                     </>
                 )}
                 
-                {(gameStage === 0 || gameStage === 5) && <button onClick={dealCards} disabled={(gameStage !== 0 && gameStage !== 5)}>Distribuisci carte</button>}
-
                 {gameStage === 1 && <button onClick={revealFlop} disabled={hasFolded} >Scopri il Flop</button>}
                 {gameStage === 2 && <button onClick={revealTurn} disabled={hasFolded} >Scopri il Turn</button>}
                 {gameStage === 3 && <button onClick={revealRiver} disabled={hasFolded} >Scopri il River</button>}
@@ -240,6 +239,17 @@ const PokerTable = () => {
                 )}
 
                 {gameStage > 0 && <button onClick={resetGame}>RESET</button>}
+            </section>
+            
+            <section className='relative top-64'>
+                {(gameStage === 0 || gameStage === 5) && 
+                <div className='flex flex-col justify-center items-center' onClick={dealCards}>
+                    <button className='rounded-full w-20 h-20 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
+                        <TbCardsFilled size='42'/>
+                    </button>
+                    <p className='p-2 absolute font-semibold -bottom-7 rounded-xl text-lg bg-emerald-800'>Distribuisci carte</p>
+                </div>
+                }
             </section>
         </div>
     );

@@ -80,14 +80,3 @@ body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     scrollbar-color: crimson theme('colors.zinc.900');
   }
 }
-
-//Footer 
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    background-color: red;
-    padding: 2rem;
-    z-index: -1;
-}

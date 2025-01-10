@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Footer = () => {
+const Modal = () => {
     const [showInstructions, setShowInstructions] = useState(false);
 
     const toggleInstructions = () => {
@@ -8,7 +8,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="footer flex items-center">
+        <div className='absolute left-8 top-3 z-10'>
             <button 
                 onClick={toggleInstructions} 
                 className="bg-zinc-900 text-white px-5 py-2 rounded-full shadow text-2xl"
@@ -46,8 +46,8 @@ const Footer = () => {
                     </div>
                 </div>
             )}
-        </footer>
+        </div>
     );
 }
 
-export default Footer;
+export default Modal;

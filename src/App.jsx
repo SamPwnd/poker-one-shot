@@ -2,15 +2,15 @@ import { useState } from 'react'
 import './App.scss';
 import PokerTable from './components/PokerTable';
 import Header from './components/Header';
-import Footer from './components/Footer';
+import Modal from './components/Modal';
 
 function App() {
 
   return (
     <>
-    <Header />
-    <PokerTable />
-    <Footer />
+      <Header />
+      <Modal />
+      <PokerTable />
     </>
   )
 }
