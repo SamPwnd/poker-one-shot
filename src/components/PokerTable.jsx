@@ -58,10 +58,13 @@ const PokerTable = () => {
         // Inizia il gioco con le carte comuni vuote
         setCommunityCards([]);
         setGameStage(1); // Comincia con il flop
-
+        
+        const playerHandResult = pokersolver.Hand.solve(playerHand);
+        const botHandResult = pokersolver.Hand.solve(botHand);
+        
         setResult('');
-        setPlayerRank('');
-        setBotRank('');
+        setPlayerRank(playerHandResult.name);
+        setBotRank(botHandResult.name);
         setBotHint('');
         setWinningRank('');
         setHasFolded(false);
@@ -167,6 +170,7 @@ const PokerTable = () => {
     const resetGame = () => {
         setGameStage(0); // Reset del gioco
         setScore(0);
+        setHintUsed(false);
         setFreeFolds(2);
     }
 
@@ -189,8 +193,8 @@ const PokerTable = () => {
                         {botHand.map((card) => (
                             <PokerCard size={120} short={card} key={card}/>
                         ))}
-                        {gameStage === 4 || botHint && <p>{botHint}</p>}
                     </div>   
+                    <p>{gameStage === 4 || botHint ? botHint : '_'}</p>
                 </div>
                 <div className='mt-6'>
                     <h3>Carte comuni:</h3>
@@ -205,13 +209,13 @@ const PokerTable = () => {
                     </div>
                 </div>
                 <div className='mt-6'>
-                    <h3>Le tue carte:</h3>
+                    <h3>Le tue carte</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {playerHand.map((card) => (
                             <PokerCard size={120} short={card} key={card}/>
                         ))}
-                        <p>{playerRank}</p>
                     </div>
+                    <p>{playerRank}</p>
                 </div>
                 </>
             )}

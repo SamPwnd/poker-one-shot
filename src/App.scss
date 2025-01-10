@@ -40,6 +40,9 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+button:disabled {
+    opacity: 0.7;
+}
 button:hover {
   border-color: theme('colors.red.800');
 }
