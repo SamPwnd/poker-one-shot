@@ -186,6 +186,9 @@ const PokerTable = () => {
         if (gameStage === 5) {
             setIsBotCardsBack(false);
         }
+        else {
+            setIsBotCardsBack(true);
+        }
     },[gameStage]);
 
 
