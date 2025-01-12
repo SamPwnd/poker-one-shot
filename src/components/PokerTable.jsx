@@ -41,6 +41,7 @@ const PokerTable = () => {
     const [score, setScore] = useState(0);
     const [hintUsed, setHintUsed] = useState(false);
     const [botHint, setBotHint] = useState(''); // Mostra i punti del bot
+    const [isBotCardsBack,setIsBotCardsBack] = useState(true);
     
 
 
@@ -61,10 +62,6 @@ const PokerTable = () => {
         
         const playerHandResult = pokersolver.Hand.solve(player);
         const botHandResult = pokersolver.Hand.solve(bot);
-        
-        console.log(player);
-        console.log(playerHandResult);
-        
         
         setResult('');
         setPlayerRank(playerHandResult.name);
@@ -185,6 +182,11 @@ const PokerTable = () => {
         }
     }, [score]);
     
+    useEffect(() => {
+        if (gameStage === 5) {
+            setIsBotCardsBack(false);
+        }
+    },[gameStage]);
 
 
     return (
@@ -195,10 +197,10 @@ const PokerTable = () => {
                     <h3>Carte del bot:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {botHand.map((card) => (
-                            <PokerCard size={120} short={card} key={card}/>
+                            <PokerCard isBackwards={isBotCardsBack} size={120} short={card} key={card}/>
                         ))}
                     </div>   
-                    <p>{gameStage === 4 || botHint ? botHint : '_'}</p>
+                    <p>{gameStage === 5 || botHint ? botHint : '_'}</p>
                 </div>
                 <div className='mt-6'>
                     <h3>Carte comuni:</h3>

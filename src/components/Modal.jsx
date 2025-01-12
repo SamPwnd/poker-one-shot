@@ -18,8 +18,8 @@ const Modal = () => {
 
             {/* Pop-up Istruzioni */}
             {showInstructions && (
-                <div className="modal fixed inset-0 bg-black bg-opacity-50 rounded-lg flex justify-center items-center z-50">
-                    <div className="bg-zinc-900 p-6 pb-24 m-8 rounded-lg max-w-lg w-full overflow-y-auto max-h-[calc(100vh-64px)]" style={{ margin: '32px 16px' }}>
+                <div className="modal fixed inset-0 bg-black py-6 bg-opacity-50 rounded-lg flex justify-center items-center z-50">
+                    <div className="bg-zinc-900 p-6 pb-24 mx-7 my-7 overflow-scroll rounded-lg max-w-lg w-full max-h-[calc(100vh-64px)]">
                         <h2 className="text-2xl font-bold mb-4">Guida</h2>
                         <ul className="list-disc list-inside text-left">
                             <h3 className='text-xl mb-2'>L'obiettivo è arrivare ad almeno 5 punti in una sessione</h3>
@@ -37,12 +37,14 @@ const Modal = () => {
                             <li className='mt-1'>Premendo il tasto <b>SUGGERIMENTO</b> puoi vedere i punti che ha in mano l'avversario in quella precisa fase della partita, ma puoi farlo solo una volta per sessione.</li>
                             <li className='mt-1'>Qui non ci sono fiches e non ci sono monete, l'avversario non può fare FOLD e non può bluffare. Sembra facile, ma lo è davvero?</li>
                         </ul>
-                        <button 
-                            onClick={toggleInstructions} 
-                            className="fixed bottom-14 bg-red-800 text-white px-5 py-3 rounded-full shadow hover:bg-red-700"
-                        >
-                            X
-                        </button>
+                        <div className='fixed bottom-14 left-0 flex justify-center w-full'>
+                            <button 
+                                onClick={toggleInstructions} 
+                                className=" bg-red-800 text-white px-5 py-3 rounded-full shadow hover:bg-red-700"
+                            >
+                                X
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
