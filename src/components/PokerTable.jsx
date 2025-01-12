@@ -59,8 +59,12 @@ const PokerTable = () => {
         setCommunityCards([]);
         setGameStage(1); // Comincia con il flop
         
-        const playerHandResult = pokersolver.Hand.solve(playerHand);
-        const botHandResult = pokersolver.Hand.solve(botHand);
+        const playerHandResult = pokersolver.Hand.solve(player);
+        const botHandResult = pokersolver.Hand.solve(bot);
+        
+        console.log(player);
+        console.log(playerHandResult);
+        
         
         setResult('');
         setPlayerRank(playerHandResult.name);
