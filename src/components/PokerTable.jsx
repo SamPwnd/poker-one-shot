@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PokerCard from 'react-pokercards';
 import pokersolver from 'pokersolver';
+import Confetti from 'react-confetti';
 import { TbCardsFilled } from "react-icons/tb";
 import { GiCardPickup } from "react-icons/gi";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -36,6 +37,7 @@ const PokerTable = () => {
     const [playerRank, setPlayerRank] = useState('');
     const [botRank, setBotRank] = useState('');
     const [gameStage, setGameStage] = useState(0); // 0: Pre-flop, 1: Flop, 2: Turn, 3: River, 4: Decide, 5: Show Winner
+    const [won, setWon] = useState(false);
     const [hasFolded, setHasFolded] = useState(false);
     const [freeFolds, setFreeFolds] = useState(2);
     const [score, setScore] = useState(0);
@@ -43,8 +45,6 @@ const PokerTable = () => {
     const [botHint, setBotHint] = useState(''); // Mostra i punti del bot
     const [isBotCardsBack,setIsBotCardsBack] = useState(true);
     
-
-
     const dealCards = () => {
         const newDeck = shuffleDeck(generateDeck());
         setDeck(newDeck); // Mischia il mazzo
@@ -64,6 +64,7 @@ const PokerTable = () => {
         const botHandResult = pokersolver.Hand.solve(bot);
         
         setResult('');
+        setWon(false);
         setPlayerRank(playerHandResult.name);
         setBotRank(botHandResult.name);
         setBotHint('');
@@ -122,6 +123,7 @@ const PokerTable = () => {
                 setResult('Hai vinto!');
                 setWinningRank(winners[0].descr);
                 updateScore(2); // Vittoria = +2
+                setWon(true);
             } else {
                 setResult('Hai perso!');
                 setWinningRank(winners[0].descr);
@@ -171,10 +173,24 @@ const PokerTable = () => {
     const resetGame = () => {
         setGameStage(0); // Reset del gioco
         setScore(0);
+        setWon(false);
         setHintUsed(false);
         setFreeFolds(2);
     }
 
+    const playSound = (soundFile) => {
+        const audio = new Audio(soundFile);
+        audio.playbackRate = Math.random() * (1.5 - 0.8) + 0.8;
+        audio.volume = 0.7
+        audio.play().catch((error) => console.error('Errore durante la riproduzione audio:', error));
+    };
+
+    useEffect(() => {
+        if (gameStage > 0 && gameStage < 5) {
+            playSound('/flip.mp3');
+        }
+    }, [gameStage]);
+        
     useEffect(() => {
         if (score >= 5) {
             setResult('Hai raggiunto 5 punti! Congratulazioni!');
@@ -193,7 +209,8 @@ const PokerTable = () => {
 
 
     return (
-        <main className={`poker-table${gameStage === 5 ? '--overlay' : ''} relative section-container pb-2 h-[calc(100vh-154px)] overflow-auto`}>
+        <main className={`poker-table${gameStage === 5 ? '--overlay h-[calc(100vh-143px)]' : ''} relative section-container pb-7 h-[calc(100vh-154px)] overflow-auto`}>
+            {won && <Confetti />}
             {gameStage > 0 && (
                 <>
                 <div className='mt-8'>
@@ -229,9 +246,9 @@ const PokerTable = () => {
                 </>
             )}
 
-            <section className='controls fixed left-0 bottom-0 bg-red-900 rounded-t-xl rounded-tr-xl pb-3 w-full z-20'>
+            <section className='controls fixed left-0 bottom-0 bg-gradient-to-b from-red-800 to-red-900 rounded-t-xl rounded-tr-xl pb-3 w-full z-20'>
                 {gameStage > 0 && (
-                    <div className='bg-emerald-800 rounded-t-xl rounded-tr-xl mb-3 p-px'>
+                    <div className='bg-gradient-to-br from-emerald-700 to-emerald-800 rounded-t-xl rounded-tr-xl mb-3 p-px'>
                         <h2>{result}</h2>
                         <h3>{winningRank}</h3>
                         <h3>Punteggio attuale: {score}</h3>
