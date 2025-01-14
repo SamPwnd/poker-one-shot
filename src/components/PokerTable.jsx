@@ -193,10 +193,10 @@ const PokerTable = () => {
 
 
     return (
-        <main className={`poker-table${gameStage === 5 ? '--overlay' : ''} relative section-container h-screen overflow-hidden`}>
+        <main className={`poker-table${gameStage === 5 ? '--overlay' : ''} relative section-container pb-2 h-[calc(100vh-154px)] overflow-auto`}>
             {gameStage > 0 && (
                 <>
-                <div className='mt-6'>
+                <div className='mt-8'>
                     <h3>Carte del bot:</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {botHand.map((card) => (

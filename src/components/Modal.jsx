@@ -19,7 +19,7 @@ const Modal = () => {
             {/* Pop-up Istruzioni */}
             {showInstructions && (
                 <div className="modal fixed inset-0 bg-black py-6 bg-opacity-50 rounded-lg flex justify-center items-center z-50">
-                    <div className="bg-zinc-900 p-6 pb-24 mx-7 my-7 overflow-scroll rounded-lg max-w-lg w-full max-h-[calc(100vh-64px)]">
+                    <div className="bg-zinc-900 p-6 pb-24 mx-4 my-7 overflow-scroll rounded-lg max-w-lg w-full max-h-[calc(100vh-64px)]">
                         <h2 className="text-2xl font-bold mb-4">Guida</h2>
                         <ul className="list-disc list-inside text-left">
                             <h3 className='text-xl mb-2'>L'obiettivo è arrivare ad almeno 5 punti in una sessione</h3>
