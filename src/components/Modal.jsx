@@ -11,7 +11,7 @@ const Modal = () => {
         <div className='absolute z-50 section-container top-4'>
             <button 
                 onClick={toggleInstructions} 
-                className="bg-zinc-900 text-white px-5 py-2 rounded-full shadow text-2xl"
+                className="bg-zinc-900 text-white p-0 w-12 h-12 rounded-full shadow text-2xl"
             >
                 ?
             </button>

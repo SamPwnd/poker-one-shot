@@ -1,6 +1,10 @@
+@use "sass:meta";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@include meta.load-css('assets/styles/fonts');
+@include meta.load-css('assets/styles/header');
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -27,6 +31,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 button {

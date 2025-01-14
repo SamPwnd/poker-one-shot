@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 const Header = () => {
 
     return (
-        <header className="flex justify-center items-center absolute top-0 w-full">
-            <h1 className='text-2xl'>Poker One-Shot</h1>
+        <header className="header flex justify-center items-center absolute top-4 w-full">
+            <h1>Poker One-Shot</h1>
         </header>
     );
 }

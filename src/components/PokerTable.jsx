@@ -209,18 +209,18 @@ const PokerTable = () => {
 
 
     return (
-        <main className={`poker-table${gameStage === 5 ? '--overlay h-[calc(100vh-143px)]' : ''} relative section-container pb-7 h-[calc(100vh-154px)] overflow-auto`}>
+        <main className={`poker-table${gameStage === 5 ? '--overlay h-[calc(100vh-142px)]' : ''} relative section-container pb-7 h-[calc(100vh-154px)] overflow-auto`}>
             {won && <Confetti />}
             {gameStage > 0 && (
                 <>
-                <div className='mt-8'>
-                    <h3>Carte del bot:</h3>
+                <div className='mt-20'>
+                    <h3>Carte del bot</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-1">
                         {botHand.map((card) => (
                             <PokerCard isBackwards={isBotCardsBack} size={120} short={card} key={card}/>
                         ))}
                     </div>   
-                    <p>{gameStage === 5 || botHint ? botHint : '_'}</p>
+                    <p className='mt-1'>{gameStage === 5 || botHint ? botHint : '_'}</p>
                 </div>
                 <div className='mt-6'>
                     <h3>Carte comuni:</h3>
@@ -241,7 +241,7 @@ const PokerTable = () => {
                             <PokerCard size={120} short={card} key={card}/>
                         ))}
                     </div>
-                    <p>{playerRank}</p>
+                    <p className='mt-1'>{playerRank}</p>
                 </div>
                 </>
             )}
