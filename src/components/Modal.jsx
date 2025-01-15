@@ -47,7 +47,7 @@ const Modal = () => {
                             </li>
                             <li className='mt-2'>Le carte comuni vengono rivelate progressivamente (Flop, Turn, River).</li>
                             <li className='mt-1'>Hai 2 <b>Fold</b> gratuiti per sessione, ma puoi usarli solo prima di vedere il River.</li>
-                            <li className='mt-1'>Premendo il tasto <b>SUGGERIMENTO</b> puoi vedere i punti che ha in mano l'avversario in quella precisa fase della partita, ma puoi farlo solo una volta per sessione.</li>
+                            <li className='mt-1'>Premendo il tasto <b>SBIRCIA</b> puoi vedere i punti che ha in mano l'avversario in quella precisa fase della partita, ma puoi farlo solo una volta per sessione.</li>
                             <li className='mt-1'>Qui non ci sono fiches e non ci sono monete, l'avversario non può fare FOLD e non può bluffare. Sembra facile, ma lo è davvero?</li>
                         </ul>
                         <div className='fixed bottom-14 left-0 flex justify-center w-full'>
