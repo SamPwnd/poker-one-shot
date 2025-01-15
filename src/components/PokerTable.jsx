@@ -87,31 +87,27 @@ const PokerTable = () => {
         return { playerHandResult, botHandResult };
     };
 
-    const revealFlop = () => {
-        const flop = deck.splice(0, 3);
-        setCommunityCards([...communityCards, ...flop]);
+    const revealCard = (numCards) => {
+        const revealedCards = deck.splice(0, numCards);
+        setCommunityCards([...communityCards, ...revealedCards]);
         setDeck(deck);
-        setGameStage(2);
         setBotHint('');
-        updateHands([...communityCards, ...flop]);
+        updateHands([...communityCards, ...revealedCards]);
+    }
+
+    const revealFlop = () => {
+        revealCard(3);
+        setGameStage(2);
     };
 
     const revealTurn = () => {
-        const turn = deck.splice(0, 1);
-        setCommunityCards([...communityCards, ...turn]);
-        setDeck(deck);
+        revealCard(1);
         setGameStage(3);
-        setBotHint('');
-        updateHands([...communityCards, ...turn]);
     };
 
     const revealRiver = () => {
-        const river = deck.splice(0, 1);
-        setCommunityCards([...communityCards, ...river]);
-        setDeck(deck);
+        revealCard(1);
         setGameStage(4);
-        setBotHint('');
-        updateHands([...communityCards, ...river]);
     }
     
     const revealWinner = () => {
@@ -120,21 +116,14 @@ const PokerTable = () => {
         setBotHint(botRank)
         if (winners.length === 1) {
             if (winners[0] === playerHandResult) {
-                setResult('Hai vinto!');
-                setWinningRank(winners[0].descr);
-                updateScore(2); // Vittoria = +2
+                updateGameResult(2, 'Hai vinto!', winners[0].descr)
                 setWon(true);
             } else {
-                setResult('Hai perso!');
-                setWinningRank(winners[0].descr);
-                updateScore(-2); // Sconfitta = -2
+                updateGameResult(-2, 'Hai perso!', winners[0].descr)
             }
         } else {
-            setResult('Pareggio!');
-            setWinningRank(playerHandResult.name);
-            updateScore(0); // Pareggio = 0
+            updateGameResult(0, 'Pareggio!', playerHandResult.name)
         }
-
         setGameStage(5)
     };
 
@@ -147,7 +136,7 @@ const PokerTable = () => {
             updateScore(-1); // Fold = -1
         }
         setHasFolded(true);
-        setResult('Hai fatto fold!');
+        setResult('Hai foldato!');
         setGameStage(5);
         setBotHint(botRank)
     };
@@ -195,15 +184,16 @@ const PokerTable = () => {
         if (score >= 5) {
             setResult('Hai raggiunto 5 punti! Congratulazioni!');
         }
-    }, [score]);
-    
-    useEffect(() => {
         if (gameStage === 5) {
             setIsBotCardsBack(false);
         }
         else {
             setIsBotCardsBack(true);
         }
+    }, [score, gameStage]);
+    
+    useEffect(() => {
+        
     },[gameStage]);
 
 
