@@ -194,7 +194,6 @@ const PokerTable = () => {
     useEffect(() => {
         if (score >= 5) {
             setResult('Hai raggiunto 5 punti! Congratulazioni!');
-            resetGame();
         }
     }, [score]);
     
@@ -209,7 +208,7 @@ const PokerTable = () => {
 
 
     return (
-        <main className={`poker-table${gameStage === 5 ? '--overlay h-[calc(100vh-142px)]' : ''} relative section-container pb-7 h-[calc(100vh-154px)] overflow-auto`}>
+        <main className={`poker-table${gameStage === 5 ? '--overlay h-[calc(100vh-142px)]' : ' h-[calc(100vh-154px)]'} relative section-container pb-7 overflow-auto`}>
             {won && <Confetti />}
             {gameStage > 0 && (
                 <>
@@ -274,7 +273,7 @@ const PokerTable = () => {
                 </div>
             </section>
             
-            {(gameStage === 0 || gameStage === 5) && 
+            {((gameStage === 0 || gameStage === 5) && score < 5) && 
                 <section className={`z-20 relative ${gameStage === 5 ? '-top-64' : 'top-64'}`}>
                     <div className='flex flex-col justify-center items-center' onClick={dealCards}>
                         <button className='rounded-full w-20 h-20 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
@@ -284,6 +283,7 @@ const PokerTable = () => {
                     </div>
                 </section>
             }
+            {score >= 5 && <p className='won-txt'>HAI VINTO!</p>}
         </main>
     );
 };
