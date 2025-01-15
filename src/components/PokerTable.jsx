@@ -87,6 +87,12 @@ const PokerTable = () => {
         return { playerHandResult, botHandResult };
     };
 
+    const updateGameResult = (change, message, winnerRank) => {
+        setResult(message);
+        setWinningRank(winnerRank);
+        updateScore(change);
+    };
+
     const revealCard = (numCards) => {
         const revealedCards = deck.splice(0, numCards);
         setCommunityCards([...communityCards, ...revealedCards]);
@@ -192,9 +198,6 @@ const PokerTable = () => {
         }
     }, [score, gameStage]);
     
-    useEffect(() => {
-        
-    },[gameStage]);
 
 
     return (
@@ -266,10 +269,10 @@ const PokerTable = () => {
             {((gameStage === 0 || gameStage === 5) && score < 5) && 
                 <section className={`z-20 relative ${gameStage === 5 ? '-top-64' : 'top-64'}`}>
                     <div className='flex flex-col justify-center items-center' onClick={dealCards}>
-                        <button className='rounded-full w-20 h-20 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
-                            <TbCardsFilled size='42'/>
+                        <button className='rounded-full w-24 h-24 p-0 flex justify-center items-center bg-emerald-800' disabled={(gameStage !== 0 && gameStage !== 5)}>
+                            <TbCardsFilled size='56'/>
                         </button>
-                        <p className='p-2 absolute font-semibold -bottom-7 rounded-xl text-lg bg-emerald-800'>Distribuisci carte</p>
+                        <p className='p-3 absolute font-semibold -bottom-8 rounded-3xl text-xl bg-emerald-800'>Distribuisci carte</p>
                     </div>
                 </section>
             }

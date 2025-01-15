@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Modal = () => {
     const [showInstructions, setShowInstructions] = useState(false);
 
     const toggleInstructions = () => {
         setShowInstructions((prev) => !prev);
+    };
+
+    // Mostra la modale solo se non è stata già chiusa
+    useEffect(() => {
+        const hasSeenModal = localStorage.getItem('hasSeenModal');
+        if (!hasSeenModal) {
+            setShowInstructions(true); // Mostra la modale se non è stata vista prima
+        }
+    }, []);
+
+    // Quando la modale viene chiusa, segnala che è stata vista
+    const handleCloseModal = () => {
+        setShowInstructions(false);
+        localStorage.setItem('hasSeenModal', 'true'); // Salva lo stato che la modale è stata vista
     };
 
     return (
@@ -16,7 +30,6 @@ const Modal = () => {
                 ?
             </button>
 
-            {/* Pop-up Istruzioni */}
             {showInstructions && (
                 <div className="modal fixed inset-0 bg-black py-6 bg-opacity-50 rounded-lg flex justify-center items-center z-50">
                     <div className="bg-zinc-900 p-6 pb-24 mx-4 my-7 overflow-scroll rounded-lg max-w-lg w-full max-h-[calc(100vh-64px)]">
@@ -39,7 +52,7 @@ const Modal = () => {
                         </ul>
                         <div className='fixed bottom-14 left-0 flex justify-center w-full'>
                             <button 
-                                onClick={toggleInstructions} 
+                                onClick={handleCloseModal} 
                                 className=" bg-red-800 text-white px-5 py-3 rounded-full shadow hover:bg-red-700"
                             >
                                 X
